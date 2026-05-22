@@ -1,38 +1,119 @@
-# Environment variables
-.env
-
-# ChromaDB local storage
-chroma_db/
-chroma_tc_db/
-
-# Python
+# 🐍 Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-dist/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
 *.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Virtual environments
+# Virtual Environments
 venv/
-.venv/
 env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
 
-# IDE
+# 🔍 IDE & Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS files
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
 .DS_Store
-Thumbs.db
-Desktop.ini
-~$*.xlsx
+.env.local
+.env.*.local
 
-# Byte-compiled
-*.py[cod]
-*$py.class
+# 📁 Environment Variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# 🗄️ Database & Cache
+*.db
+*.sqlite
+*.sqlite3
+qdrant_db/
+.cache/
+*.cache
+
+# 📊 Data & Uploads (if sensitive)
+data/private/
+uploads/large/
+*.csv
+*.xlsx
+*.xls
+!sample_data/
+!data/readme.md
+
+# 📝 Logs & Temp Files
+logs/
+*.log
+*.log.*
+tmp/
+temp/
+*.tmp
+
+# 🎯 Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+coverage.xml
+
+# 🏗️ Build Artifacts
+*.whl
+*.tar.gz
+.eggs/
+
+# 📦 Dependency Locks (optional, comment out if needed)
+# poetry.lock
+# Pipfile.lock
+
+# 🔐 Secrets & Credentials
+secrets/
+.secrets/
+credentials.json
+*.key
+*.pem
+
+# 🐳 Docker & Containerization
+.dockerignore
+docker-compose.override.yml
+
+# 🎨 Frontend Build
+node_modules/
+dist/
+build/
+
+# 📱 OS Specific
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
