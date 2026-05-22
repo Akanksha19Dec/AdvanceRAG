@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Advanced RAG Pipeline Explorer — Interactive step-by-step visualization of BGE-M3 + Qdrant + BGE Reranker + Groq LLM">
+<title>Advanced RAG Pipeline Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header" id="appHeader">
+  <div class="logo">A</div>
+  <div>
+    <h1>Advanced RAG Pipeline</h1>
+    <p class="header-sub">Interactive Step-by-Step Explorer</p>
+  </div>
+  <div class="tech-badges">
+    <span class="tech-badge e">🧠 BGE-M3</span>
+    <span class="tech-badge d">🗄️ Qdrant</span>
+    <span class="tech-badge r">🔄 BGE Reranker</span>
+    <span class="tech-badge l">⚡ Groq Llama 3.3</span>
+  </div>
+</header>
+
+<!-- ═══ PIPELINE STEPPER ═══ -->
+<nav class="stepper-bar" id="stepperBar">
+  <div class="stepper">
+    <div class="step active" id="step-1" data-step="1" onclick="goToStep(1)">
+      <div class="step-icon">📤</div>
+      <div class="step-info">
+        <div class="step-label">Step 1</div>
+        <div class="step-desc">Upload Excel</div>
+      </div>
+      <div class="step-status" id="status-1"></div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step-2" data-step="2" onclick="goToStep(2)">
+      <div class="step-icon">✂️</div>
+      <div class="step-info">
+        <div class="step-label">Step 2</div>
+        <div class="step-desc">Chunking</div>
+      </div>
+      <div class="step-status" id="status-2"></div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step-3" data-step="3" onclick="goToStep(3)">
+      <div class="step-icon">🧠</div>
+      <div class="step-info">
+        <div class="step-label">Step 3</div>
+        <div class="step-desc">Embed & Store</div>
+      </div>
+      <div class="step-status" id="status-3"></div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step-4" data-step="4" onclick="goToStep(4)">
+      <div class="step-icon">🔍</div>
+      <div class="step-info">
+        <div class="step-label">Step 4</div>
+        <div class="step-desc">Top-10 Retrieve</div>
+      </div>
+      <div class="step-status" id="status-4"></div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step-5" data-step="5" onclick="goToStep(5)">
+      <div class="step-icon">🔄</div>
+      <div class="step-info">
+        <div class="step-label">Step 5</div>
+        <div class="step-desc">Re-rank Top-5</div>
+      </div>
+      <div class="step-status" id="status-5"></div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step-6" data-step="6" onclick="goToStep(6)">
+      <div class="step-icon">💬</div>
+      <div class="step-info">
+        <div class="step-label">Step 6</div>
+        <div class="step-desc">Ask Questions</div>
+      </div>
+      <div class="step-status" id="status-6"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main class="main-content" id="mainContent">
+
+  <!-- ──────── STEP 1: Upload ──────── -->
+  <section class="stage active" id="stage-1">
+    <div class="stage-header">
+      <div class="stage-number">1</div>
+      <div>
+        <h2>Upload Test Cases</h2>
+        <p class="stage-sub">Upload your Excel file (.xlsx) containing test cases to begin the RAG pipeline</p>
+      </div>
+    </div>
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-inner" id="uploadInner">
+        <div class="upload-icon">📤</div>
+        <h3>Drop your Excel file here</h3>
+        <p>or click to browse</p>
+        <p class="upload-hint">Supported: .xlsx, .xls — Sheet name must be "Test Cases"</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
+      </div>
+      <div class="upload-progress" id="uploadProgress" style="display:none">
+        <div class="loader-ring"></div>
+        <p id="uploadStatusText">Uploading and parsing...</p>
+      </div>
+    </div>
+    <div class="upload-result" id="uploadResult" style="display:none">
+      <div class="result-card success">
+        <div class="result-icon">✅</div>
+        <div class="result-body">
+          <h3 id="uploadFileName"></h3>
+          <div class="result-stats" id="uploadStats"></div>
+        </div>
+      </div>
+      <button class="btn-next" id="btnNext1" onclick="goToStep(2)">
+        Next: View Chunking →
+      </button>
+    </div>
+  </section>
+
+  <!-- ──────── STEP 2: Chunking ──────── -->
+  <section class="stage" id="stage-2">
+    <div class="stage-header">
+      <div class="stage-number">2</div>
+      <div>
+        <h2>Chunking Strategy</h2>
+        <p class="stage-sub">Each test case = 1 structured chunk. View how raw Excel rows are transformed into embeddable text chunks.</p>
+      </div>
+    </div>
+    <div class="chunking-overview" id="chunkingOverview"></div>
+    <div class="chunk-grid" id="chunkGrid"></div>
+    <button class="btn-next" id="btnNext2" onclick="goToStep(3)" style="display:none">
+      Next: Embed & Store in Vector DB →
+    </button>
+  </section>
+
+  <!-- ──────── STEP 3: Embed & Store ──────── -->
+  <section class="stage" id="stage-3">
+    <div class="stage-header">
+      <div class="stage-number">3</div>
+      <div>
+        <h2>Embed & Store in Qdrant</h2>
+        <p class="stage-sub">Generate BGE-M3 embeddings (1024-dim dense vectors) and store in Qdrant vector database</p>
+      </div>
+    </div>
+    <div class="embed-action" id="embedAction">
+      <div class="embed-info-card">
+        <div class="embed-row">
+          <span class="embed-label">Embedding Model</span>
+          <span class="embed-value">BAAI/bge-m3</span>
+        </div>
+        <div class="embed-row">
+          <span class="embed-label">Vector Dimension</span>
+          <span class="embed-value">1024</span>
+        </div>
+        <div class="embed-row">
+          <span class="embed-label">Vector DB</span>
+          <span class="embed-value">Qdrant (local, embedded)</span>
+        </div>
+        <div class="embed-row">
+          <span class="embed-label">Distance Metric</span>
+          <span class="embed-value">Cosine Similarity</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="btnEmbed" onclick="embedAndStore()">
+        🧠 Start Embedding & Storage
+      </button>
+      <p class="embed-note">⏱️ This may take several minutes for large datasets (first run downloads ~1.3GB model)</p>
+    </div>
+    <div class="embed-progress" id="embedProgress" style="display:none">
+      <div class="loader-ring large"></div>
+      <h3 id="embedStatusText">Loading BGE-M3 model...</h3>
+      <p class="embed-sub" id="embedSubText">This is a one-time download (~1.3GB). Subsequent runs will be faster.</p>
+    </div>
+    <div class="embed-result" id="embedResult" style="display:none"></div>
+    <button class="btn-next" id="btnNext3" onclick="goToStep(4)" style="display:none">
+      Next: Query & Retrieve Top-10 →
+    </button>
+  </section>
+
+  <!-- ──────── STEP 4: Top-10 Retrieval ──────── -->
+  <section class="stage" id="stage-4">
+    <div class="stage-header">
+      <div class="stage-number">4</div>
+      <div>
+        <h2>Vector Search — Top 10 Retrieval</h2>
+        <p class="stage-sub">Enter a query to embed with BGE-M3 and retrieve the top 10 most similar test cases from Qdrant</p>
+      </div>
+    </div>
+    <div class="search-box">
+      <div class="search-input-wrap">
+        <textarea id="searchQuery" placeholder="e.g. Which test cases cover SSO login with error handling?"></textarea>
+        <button class="btn-search" id="btnSearch" onclick="performSearch()">🔍 Search Qdrant</button>
+      </div>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <button class="btn-next" id="btnNext4" onclick="goToStep(5)" style="display:none">
+      Next: Re-rank with Cross-Encoder →
+    </button>
+  </section>
+
+  <!-- ──────── STEP 5: Re-ranking ──────── -->
+  <section class="stage" id="stage-5">
+    <div class="stage-header">
+      <div class="stage-number">5</div>
+      <div>
+        <h2>Cross-Encoder Re-ranking — Top 5</h2>
+        <p class="stage-sub">BGE-reranker-v2-m3 rescores (query, document) pairs to refine the top 10 down to the most relevant 5</p>
+      </div>
+    </div>
+    <div class="rerank-action" id="rerankAction">
+      <div class="rerank-info-card">
+        <div class="embed-row">
+          <span class="embed-label">Re-ranker Model</span>
+          <span class="embed-value">BAAI/bge-reranker-v2-m3</span>
+        </div>
+        <div class="embed-row">
+          <span class="embed-label">Input</span>
+          <span class="embed-value">Top 10 from Vector Search</span>
+        </div>
+        <div class="embed-row">
+          <span class="embed-label">Output</span>
+          <span class="embed-value">Top 5 (re-scored by relevance)</span>
+        </div>
+      </div>
+      <button class="btn-primary rerank" id="btnRerank" onclick="performRerank()">
+        🔄 Re-rank with Cross-Encoder
+      </button>
+    </div>
+    <div class="rerank-results" id="rerankResults"></div>
+    <button class="btn-next" id="btnNext5" onclick="goToStep(6)" style="display:none">
+      Next: Ask Questions (Full Pipeline) →
+    </button>
+  </section>
+
+  <!-- ──────── STEP 6: Q&A ──────── -->
+  <section class="stage" id="stage-6">
+    <div class="stage-header">
+      <div class="stage-number">6</div>
+      <div>
+        <h2>Ask Questions — Full RAG Pipeline</h2>
+        <p class="stage-sub">Your query flows through the entire pipeline: BGE-M3 → Qdrant → BGE Reranker → Groq LLM</p>
+      </div>
+    </div>
+    <div class="qa-section">
+      <div class="qa-input-wrap">
+        <textarea id="qaInput" placeholder="Ask anything about your test cases...&#10;e.g. What test cases cover password reset functionality?"></textarea>
+        <button class="btn-ask" id="btnAsk" onclick="askQuestion()">
+          <span>⚡</span> Ask
+        </button>
+      </div>
+      <div class="qa-results" id="qaResults">
+        <div class="qa-empty">
+          <div class="qa-empty-icon">🧪</div>
+          <p>Your query will flow through the entire Advanced RAG pipeline:</p>
+          <div class="pipeline-mini">
+            <span>Query</span> → <span>BGE-M3</span> → <span>Qdrant</span> → <span>Top-10</span> → <span>Reranker</span> → <span>Top-5</span> → <span>Groq LLM</span> → <span>Answer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/script.js"></script>
+</body>
+</html>

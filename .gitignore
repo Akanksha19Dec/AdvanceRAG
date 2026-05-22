@@ -1,0 +1,38 @@
+# Environment variables
+.env
+
+# ChromaDB local storage
+chroma_db/
+chroma_tc_db/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*.xlsx
+
+# Byte-compiled
+*.py[cod]
+*$py.class

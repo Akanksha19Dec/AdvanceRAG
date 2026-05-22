@@ -1,0 +1,4 @@
+create  a simple RAG using nomic embedded text via local ollama using python script .You need to chunk the document I have attached 
+
+Product Requirements Document_ VWO Login Dashboard.pdf
+ based on chunk size 600 -1000 char and overlap of 100 char , also create an html doucment to show how this chunking happend and a filed for user to ask the question and based on data retrived it can answer the question  , alos tell form which chunk it has taken the answer

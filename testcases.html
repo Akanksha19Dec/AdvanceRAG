@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Case RAG — VWO Login Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1e293b;--border:#2d3a50;--accent:#6366f1;--accent2:#818cf8;--accent3:#a78bfa;--green:#34d399;--amber:#fbbf24;--rose:#fb7185;--cyan:#22d3ee;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--radius:14px;--glow:0 0 24px rgba(99,102,241,0.18)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{padding:16px 28px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(167,139,250,.04))}
+.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 16px rgba(245,158,11,.3)}
+.header h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--amber),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-sub{font-size:11px;color:var(--text3);margin:0}
+.tech-badges{margin-left:auto;display:flex;gap:5px}
+.tech-badge{font-size:9px;padding:3px 8px;border-radius:16px;font-weight:600;border:1px solid var(--border);background:var(--surface)}
+.tech-badge.e{color:var(--cyan);border-color:rgba(34,211,238,.3)}
+.tech-badge.l{color:var(--green);border-color:rgba(52,211,153,.3)}
+.tech-badge.d{color:var(--amber);border-color:rgba(251,191,36,.3)}
+/* Pipeline */
+.pipe-bar{padding:10px 28px;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto}
+.pipe{display:flex;align-items:center;gap:0;justify-content:center}
+.ps{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);transition:all .3s;white-space:nowrap}
+.ps .pi{font-size:15px}.ps .pl{font-size:9px;font-weight:600;text-transform:uppercase;color:var(--text3)}.ps .pd{font-size:10px;color:var(--text)}
+.pa{font-size:14px;color:var(--text3);margin:0 3px}
+.ps.a1{border-color:var(--accent);box-shadow:0 0 12px rgba(99,102,241,.2)}
+.ps.a2{border-color:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.2)}
+.ps.a3{border-color:var(--amber);box-shadow:0 0 12px rgba(251,191,36,.2)}
+.ps.a4{border-color:var(--green);box-shadow:0 0 12px rgba(52,211,153,.2)}
+.ps.a5{border-color:var(--accent3);box-shadow:0 0 12px rgba(167,139,250,.2)}
+/* Layout */
+.container{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 120px)}
+.panel{padding:18px;overflow-y:auto;max-height:calc(100vh - 120px)}
+.panel-left{border-right:1px solid var(--border)}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center}
+.stat .val{font-size:15px;font-weight:700;color:var(--accent2)}.stat .lbl{font-size:8px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+/* Module pills */
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.pill{font-size:9px;padding:4px 10px;border-radius:14px;background:var(--surface);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s}
+.pill:hover,.pill.active{border-color:var(--accent);color:var(--accent2);background:rgba(99,102,241,.1)}
+.pill .cnt{font-weight:700;color:var(--accent2)}
+/* Cards */
+.stitle{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.tc-list{display:flex;flex-direction:column;gap:6px}
+.tc-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;transition:all .2s;cursor:pointer}
+.tc-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tc-card.hl{border-color:var(--green);box-shadow:0 0 16px rgba(52,211,153,.15);background:rgba(52,211,153,.03)}
+.tc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px}
+.badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:14px}
+.b-id{background:rgba(99,102,241,.15);color:var(--accent2)}
+.b-mod{background:rgba(34,211,238,.1);color:var(--cyan);font-size:8px}
+.b-cat{font-size:8px}.b-pos{background:rgba(52,211,153,.15);color:var(--green)}.b-neg{background:rgba(251,113,133,.15);color:var(--rose)}.b-edge{background:rgba(99,102,241,.15);color:var(--accent2)}.b-bnd{background:rgba(167,139,250,.15);color:var(--accent3)}
+.b-pri{font-size:8px}.b-crit{background:rgba(251,113,133,.2);color:var(--rose)}.b-high{background:rgba(251,191,36,.15);color:var(--amber)}.b-med{background:rgba(99,102,241,.12);color:var(--accent2)}.b-low{background:rgba(52,211,153,.12);color:var(--green)}
+.tc-desc{font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:500}
+.tc-detail{font-size:10px;color:var(--text3);line-height:1.5;white-space:pre-wrap;max-height:0;overflow:hidden;transition:max-height .3s}
+.tc-card.expanded .tc-detail{max-height:500px}
+.sim-badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:14px;background:rgba(52,211,153,.15);color:var(--green)}
+.db-badge{font-size:8px;padding:2px 6px;border-radius:10px;background:rgba(251,191,36,.12);color:var(--amber);font-weight:600}
+/* QA */
+.qa{display:flex;flex-direction:column;height:100%}
+.ig{position:relative;margin-bottom:14px}
+.ig textarea{width:100%;padding:12px 48px 12px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:12px;resize:none;height:68px;outline:none;transition:border .2s}
+.ig textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.ig textarea::placeholder{color:var(--text3)}
+.sbtn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.sbtn:hover{transform:scale(1.08)}.sbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.aa{flex:1;overflow-y:auto}
+.ac{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;animation:fi .4s}
+.ac h3{font-size:12px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.at{font-size:12px;line-height:1.7;color:var(--text2);white-space:pre-wrap}
+.sc{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px}
+.sc .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px}
+.sc .st{font-size:10px;line-height:1.5;color:var(--text3);white-space:pre-wrap;max-height:60px;overflow:hidden}
+.loader{display:flex;align-items:center;gap:8px;padding:16px;color:var(--text3);font-size:11px}
+.dp{display:flex;gap:3px}.dp span{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pu 1.2s infinite}.dp span:nth-child(2){animation-delay:.2s}.dp span:nth-child(3){animation-delay:.4s}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:55%;color:var(--text3);text-align:center;gap:8px}.empty .ei{font-size:40px;opacity:.4}.empty p{font-size:12px;max-width:260px;line-height:1.5}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pu{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+@media(max-width:900px){.container{grid-template-columns:1fr}.panel{max-height:none}.panel-left{border-right:none;border-bottom:1px solid var(--border)}.stats{grid-template-columns:repeat(2,1fr)}.tech-badges,.pipe-bar{display:none}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">T</div>
+  <div><h1>Test Case RAG Explorer</h1><p class="header-sub">VWO Login Dashboard · 100 Test Cases</p></div>
+  <div class="tech-badges">
+    <span class="tech-badge e">🧠 nomic-embed-text</span>
+    <span class="tech-badge l">⚡ Groq · gpt-oss-120b</span>
+    <span class="tech-badge d">🗄️ ChromaDB</span>
+  </div>
+</div>
+<div class="pipe-bar">
+  <div class="pipe" id="pipe">
+    <div class="ps" id="p1"><div class="pi">❓</div><div><div class="pl">Step 1</div><div class="pd">User Query</div></div></div><div class="pa">→</div>
+    <div class="ps" id="p2"><div class="pi">🧠</div><div><div class="pl">Step 2</div><div class="pd">Embed (Ollama)</div></div></div><div class="pa">→</div>
+    <div class="ps" id="p3"><div class="pi">🔍</div><div><div class="pl">Step 3</div><div class="pd">ChromaDB Search</div></div></div><div class="pa">→</div>
+    <div class="ps" id="p4"><div class="pi">📎</div><div><div class="pl">Step 4</div><div class="pd">Top-5 Test Cases</div></div></div><div class="pa">→</div>
+    <div class="ps" id="p5"><div class="pi">⚡</div><div><div class="pl">Step 5</div><div class="pd">Groq LLM</div></div></div><div class="pa">→</div>
+    <div class="ps" id="p6"><div class="pi">💬</div><div><div class="pl">Step 6</div><div class="pd">Answer</div></div></div>
+  </div>
+</div>
+<div class="container">
+  <div class="panel panel-left">
+    <div class="stats" id="stats"></div>
+    <div id="pills"></div>
+    <div class="stitle"><span>🧪</span> Test Cases <span id="filterLabel" style="font-size:10px;color:var(--text3);font-weight:400"></span></div>
+    <div class="tc-list" id="tcList"><div class="loader"><div class="dp"><span></span><span></span><span></span></div>Loading…</div></div>
+  </div>
+  <div class="panel">
+    <div class="qa">
+      <div class="stitle"><span>💬</span> Ask About Test Cases</div>
+      <div class="ig">
+        <textarea id="qInput" placeholder="e.g. Which test cases cover SSO login?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask()}"></textarea>
+        <button class="sbtn" id="sBtn" onclick="ask()">➤</button>
+      </div>
+      <div class="aa" id="aArea">
+        <div class="empty"><div class="ei">🧪</div><p>Ask about test cases — coverage, modules, priorities, or specific scenarios. Results retrieved from ChromaDB via RAG.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let allChunks=[],activeFilter=null;
+const pIds=['p1','p2','p3','p4','p5','p6'],pCls=['a1','a2','a3','a3','a4','a5'];
+function clearPipe(){pIds.forEach(id=>{document.getElementById(id).className='ps'});}
+function actPipe(n){clearPipe();for(let i=0;i<=n;i++)document.getElementById(pIds[i]).classList.add(pCls[i]);}
+function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function catCls(c){return c==='Positive'?'b-pos':c==='Negative'?'b-neg':c==='Edge Case'?'b-edge':'b-bnd';}
+function priCls(p){return p==='Critical'?'b-crit':p==='High'?'b-high':p==='Medium'?'b-med':'b-low';}
+
+async function load(){
+  try{const r=await fetch('/api/chunks');const d=await r.json();allChunks=d.chunks;renderStats(d);renderPills(d);renderTCs(d.chunks);}
+  catch(e){document.getElementById('tcList').innerHTML='<p style="color:var(--rose)">Failed to load.</p>';}
+}
+
+function renderStats(d){
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="val">${d.total}</div><div class="lbl">Test Cases</div></div>
+    <div class="stat"><div class="val">${Object.keys(d.modules).length}</div><div class="lbl">Modules</div></div>
+    <div class="stat"><div class="val">${d.embed_dim||'n/a'}</div><div class="lbl">Embed Dim</div></div>
+    <div class="stat"><div class="val">${d.vector_store}</div><div class="lbl">Vector DB</div></div>`;
+}
+
+function renderPills(d){
+  let h='';
+  for(const[m,c]of Object.entries(d.modules))
+    h+=`<div class="pill" onclick="filterMod('${m}',this)">${m} <span class="cnt">${c}</span></div>`;
+  h+=`<div class="pill" onclick="filterMod(null,this)">All <span class="cnt">${d.total}</span></div>`;
+  document.getElementById('pills').innerHTML=h;
+}
+
+function filterMod(mod,el){
+  activeFilter=mod;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const filtered=mod?allChunks.filter(c=>c.module===mod):allChunks;
+  document.getElementById('filterLabel').textContent=mod?`(${mod})`:'';
+  renderTCs(filtered);
+}
+
+function renderTCs(tcs,hlIds=[]){
+  const h=tcs.map(c=>{
+    const hl=hlIds.includes(c.id)?' hl':'';
+    return `<div class="tc-card${hl}" id="tc-${c.id}" onclick="this.classList.toggle('expanded')">
+      <div class="tc-top">
+        <span class="badge b-id">${esc(c.tc_id)}</span>
+        <span class="badge b-mod">${esc(c.module)}</span>
+        <span class="badge b-cat ${catCls(c.category)}">${esc(c.category)}</span>
+        <span class="badge b-pri ${priCls(c.priority)}">${esc(c.priority)}</span>
+      </div>
+      <div class="tc-desc">${esc(c.description)}</div>
+      <div class="tc-detail">Pre: ${esc(c.preconditions)}\nSteps: ${esc(c.steps)}\nExpected: ${esc(c.expected)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('tcList').innerHTML=h||'<p style="color:var(--text3)">No test cases.</p>';
+}
+
+async function ask(){
+  const q=document.getElementById('qInput').value.trim();if(!q)return;
+  const btn=document.getElementById('sBtn');btn.disabled=true;
+  const area=document.getElementById('aArea');
+  actPipe(0);area.innerHTML='<div class="loader"><div class="dp"><span></span><span></span><span></span></div>Embedding query…</div>';
+  await new Promise(r=>setTimeout(r,300));
+  actPipe(1);area.innerHTML='<div class="loader"><div class="dp"><span></span><span></span><span></span></div>Searching ChromaDB…</div>';
+  await new Promise(r=>setTimeout(r,300));
+  actPipe(2);
+  try{
+    const res=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+    const data=await res.json();
+    if(data.error){area.innerHTML=`<div class="ac"><p style="color:var(--rose)">${esc(data.error)}</p></div>`;btn.disabled=false;clearPipe();return;}
+    actPipe(3);await new Promise(r=>setTimeout(r,200));
+    actPipe(4);await new Promise(r=>setTimeout(r,200));
+    actPipe(5);
+    const ids=data.retrieved_chunks.map(c=>c.chunk_id);
+    renderTCs(allChunks,ids);activeFilter=null;
+    setTimeout(()=>{const el=document.getElementById('tc-'+ids[0]);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);
+    let h=`<div class="ac"><h3>🤖 Answer <span class="db-badge">via Groq</span></h3><div class="at">${esc(data.answer)}</div></div>`;
+    h+=`<div class="ac"><h3>📎 Retrieved Test Cases (${data.retrieved_chunks.length}) <span class="db-badge">ChromaDB</span></h3>`;
+    data.retrieved_chunks.forEach(c=>{
+      h+=`<div class="sc"><div class="sh"><span class="badge b-id">${esc(c.tc_id)}</span><span class="badge b-mod">${esc(c.module)}</span><span class="badge b-pri ${priCls(c.priority)}">${esc(c.priority)}</span><span class="sim-badge">${(c.similarity*100).toFixed(1)}%</span></div><div class="st">${esc(c.text.substring(0,250))}…</div></div>`;
+    });
+    h+='</div>';area.innerHTML=h;
+  }catch(e){area.innerHTML=`<div class="ac"><p style="color:var(--rose)">Error: ${esc(e.message)}</p></div>`;clearPipe();}
+  btn.disabled=false;
+}
+load();
+</script>
+</body>
+</html>
